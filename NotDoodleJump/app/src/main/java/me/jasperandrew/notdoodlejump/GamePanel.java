@@ -21,23 +21,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static PlatformGenerator platformGenerator;
 
     Paint scorePaint = new Paint();
-    Bitmap groundImg;
 
     public GamePanel(Context context) {
         super(context);
         getHolder().addCallback(this);
 
-        Const.CURRENT_CONTEXT = context;
-
         thread = new MainThread(getHolder(), this);
 
-        BitmapFactory bf = new BitmapFactory();
-        groundImg = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.ground);
+        player = new RectPlayer(Const.SCREEN_WIDTH/2-50, Const.SCREEN_HEIGHT-200, 79, 150, context);
 
-        player = new RectPlayer(Const.SCREEN_WIDTH/2-50, Const.SCREEN_HEIGHT-200, 79, 150, Color.RED);
-
-        platformGenerator = new PlatformGenerator(200, 70);
-        platformGenerator.add(new Obstacle(0, Const.SCREEN_HEIGHT-100, Const.SCREEN_WIDTH, 100, Const.Collision.GROUND, groundImg));
+        platformGenerator = new PlatformGenerator(200, 70, context);
         platformGenerator.init(10);
 
         Const.SCORE = 0;
@@ -49,10 +42,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void resetGame() {
-        player = new RectPlayer(Const.SCREEN_WIDTH/2-50, Const.SCREEN_HEIGHT-200, 79, 150, Color.RED);
+        player.reset();
 
-        platformGenerator = new PlatformGenerator(200, 70);
-        platformGenerator.add(new Obstacle(0, Const.SCREEN_HEIGHT-100, Const.SCREEN_WIDTH, 100, Const.Collision.GROUND, groundImg));
         platformGenerator.init(10);
 
         Const.SCORE = 0;

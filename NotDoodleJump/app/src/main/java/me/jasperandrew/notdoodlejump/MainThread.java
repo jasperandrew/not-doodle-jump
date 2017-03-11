@@ -7,20 +7,19 @@ import android.view.SurfaceHolder;
  * Created by Jasper on 2/11/2017.
 **/
 
-public class MainThread extends Thread {
-    private double averageFPS;
-    private SurfaceHolder surfaceHolder;
+class MainThread extends Thread {
+    private final SurfaceHolder surfaceHolder;
     private GamePanel gamePanel;
     private boolean running;
-    public static Canvas canvas;
+    //private double averageFPS;
 
 
 
-    public void setRunning(boolean running) {
+    void setRunning(boolean running) {
         this.running = running;
     }
 
-    public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
+    MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
         super();
         this.surfaceHolder = surfaceHolder;
         this.gamePanel = gamePanel;
@@ -37,7 +36,7 @@ public class MainThread extends Thread {
 
         while(running){
             startTime = System.nanoTime();
-            canvas = null;
+            Canvas canvas = null;
 
             try {
                 canvas = this.surfaceHolder.lockCanvas();
@@ -65,7 +64,7 @@ public class MainThread extends Thread {
             frameCount++;
 
             if(frameCount == Const.MAX_FPS){
-                averageFPS = 1000/((totalTime/frameCount)/1000000);
+                //averageFPS = 1000/((totalTime/frameCount)/1000000);
                 frameCount = 0;
                 totalTime = 0;
             }

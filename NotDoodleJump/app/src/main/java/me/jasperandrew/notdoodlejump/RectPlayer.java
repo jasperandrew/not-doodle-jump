@@ -1,5 +1,6 @@
 package me.jasperandrew.notdoodlejump;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,14 +11,13 @@ import android.graphics.Rect;
  * Created by Jasper on 2/11/2017.
  **/
 
-public class RectPlayer implements GameObject {
+class RectPlayer implements GameObject {
 
     private Rect rectangle;
-    private int startX;
-    private int startY;
     private int width;
     private int height;
-    private int color;
+    private int startX;
+    private int startY;
 
     private float vertAccel;
     private float horizAccel;
@@ -28,26 +28,31 @@ public class RectPlayer implements GameObject {
     private Bitmap fallingRight;
     private Bitmap currentImg;
 
-    public RectPlayer(int startX, int startY, int width, int height, int color) {
-        this.startX = startX;
-        this.startY = startY;
+    RectPlayer(int startX, int startY, int width, int height, Context context) {
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.startX = startX;
+        this.startY = startY;
 
         rectangle = new Rect(startX, startY, startX+width, startY+height);
 
-        BitmapFactory bf = new BitmapFactory();
-        risingLeft = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.datboi_l1);
-        risingRight = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.datboi_r1);
-        fallingLeft = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.datboi_l2);
-        fallingRight = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.datboi_r2);
+        risingLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.datboi_l1);
+        risingRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.datboi_r1);
+        fallingLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.datboi_l2);
+        fallingRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.datboi_r2);
 
         currentImg = risingLeft;
 
     }
 
-    public Const.Collision getCollision(Obstacle ob) {
+    void reset() {
+        rectangle.top = startY;
+        rectangle.bottom = startY+height;
+        rectangle.left = startX;
+        rectangle.right = startX+width;
+    }
+
+    private Const.Collision getCollision(Obstacle ob) {
         Rect obRect = ob.getRectangle();
         if(vertAccel <= 0 && (obRect.contains(rectangle.left, rectangle.bottom) || obRect.contains(rectangle.right, rectangle.bottom))){
                return ob.getType();

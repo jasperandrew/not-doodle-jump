@@ -1,61 +1,63 @@
 package me.jasperandrew.notdoodlejump;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
-import static me.jasperandrew.notdoodlejump.MainThread.canvas;
-
 /**
  * Created by Jasper on 2/12/2017.
  **/
 
-public class PlatformGenerator {
+class PlatformGenerator {
     private ArrayList<Obstacle> platforms;
     private int width;
     private int height;
 
     private ArrayList<Bitmap> normalImgs;
-    private Bitmap groundImg;
     private Bitmap boostImg;
     private Bitmap rocketImg;
+    private Bitmap groundImg;
 
 
-    public PlatformGenerator(int width, int height) {
+    PlatformGenerator(int width, int height, Context context) {
         this.width = width;
         this.height = height;
         platforms = new ArrayList<>();
 
         normalImgs = new ArrayList<>();
 
-        BitmapFactory bf = new BitmapFactory();
-        normalImgs.add(bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform1));
-        normalImgs.add(bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform2));
-        normalImgs.add(bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform3));
-        normalImgs.add(bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform4));
-        normalImgs.add(bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform5));
-        //groundImg = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.ground);
-        boostImg = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform_rainbow);
-        rocketImg = bf.decodeResource(Const.CURRENT_CONTEXT.getResources(), R.drawable.platform_wendys);
+        normalImgs.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.platform1));
+        normalImgs.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.platform2));
+        normalImgs.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.platform3));
+        normalImgs.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.platform4));
+        normalImgs.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.platform5));
+        boostImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.platform_rainbow);
+        rocketImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.platform_wendys);
+        groundImg = BitmapFactory.decodeResource(context.getResources(), R.drawable.ground);
+
     }
 
-    public void init(int n) {
+    void init(int n) {
+        clearPlatforms();
+
+        platforms.add(new Obstacle(0, Const.SCREEN_HEIGHT-100, Const.SCREEN_WIDTH, 100, Const.Collision.GROUND, groundImg));
+
         int prevY = Const.SCREEN_HEIGHT-100;
         for(int i = 0; i < n; i++){
             int x = (int)(Math.random() * (Const.SCREEN_WIDTH - width + 1));
             int y = (int)(Math.random() * ((prevY - 4*height) - (prevY - Const.MAX_PLATFORM_GAP) + 1)) + (prevY - Const.MAX_PLATFORM_GAP);
 
             Const.Collision type = Math.random() < 0.9 ? Const.Collision.NORMAL : Const.Collision.BOOST;
+            type = Math.random() < 0.99 ? type : Const.Collision.ROCKET;
             Bitmap img;
             switch(type){
                 case ROCKET:
                     img = rocketImg;break;
                 case BOOST:
                     img = boostImg;break;
-                case GROUND:
-                    img = groundImg;break;
                 default:
                     img = normalImgs.get((int)(Math.random() * 5));
             }
@@ -65,15 +67,19 @@ public class PlatformGenerator {
         }
     }
 
-    public void add(Obstacle ob){
+    void add(Obstacle ob) {
         platforms.add(ob);
     }
 
-    public ArrayList<Obstacle> getPlatforms() {
+    void clearPlatforms() {
+        platforms.clear();
+    }
+
+    ArrayList<Obstacle> getPlatforms() {
         return platforms;
     }
 
-    public void update() {
+    void update() {
         if(platforms.get(0).getRectangle().top > Const.SCREEN_HEIGHT){
             platforms.remove(0);
             int prevY = platforms.get(platforms.size()-1).getRectangle().top;
@@ -87,8 +93,6 @@ public class PlatformGenerator {
                     img = rocketImg; break;
                 case BOOST:
                     img = boostImg; break;
-                case GROUND:
-                    img = groundImg; break;
                 default:
                     img = normalImgs.get((int)(Math.random() * 5));
             }
@@ -100,7 +104,7 @@ public class PlatformGenerator {
         }
     }
 
-    public void draw(Canvas canvas) {
+    void draw(Canvas canvas) {
         for(Obstacle plat : platforms)
             plat.draw(canvas);
     }

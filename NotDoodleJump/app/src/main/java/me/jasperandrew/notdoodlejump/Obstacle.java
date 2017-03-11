@@ -2,7 +2,6 @@ package me.jasperandrew.notdoodlejump;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -10,39 +9,31 @@ import android.graphics.Rect;
  * Created by Jasper on 2/11/2017.
  **/
 
-public class Obstacle implements GameObject {
+class Obstacle implements GameObject {
     private Rect rectangle;
-    private int startX;
-    private int startY;
-    private int width;
-    private int height;
     private Const.Collision type;
     private boolean moving;
     private int direction;
     private Bitmap image;
 
-    public Rect getRectangle() {
+    Rect getRectangle() {
         return rectangle;
     }
 
-    public Const.Collision getType() {
+    Const.Collision getType() {
         return type;
     }
 
-    public boolean isMoving() {
+    boolean isMoving() {
         return moving;
     }
 
-    public void moveDown(float dx) {
+    void moveDown(float dx) {
         rectangle.top += dx;
         rectangle.bottom += dx;
     }
 
-    public Obstacle(int startX, int startY, int width, int height, Const.Collision type, Bitmap img) {
-        this.startX = startX;
-        this.startY = startY;
-        this.width = width;
-        this.height = height;
+    Obstacle(int startX, int startY, int width, int height, Const.Collision type, Bitmap img) {
         this.type = type;
         this.image = img;
 

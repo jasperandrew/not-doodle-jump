@@ -9,12 +9,12 @@ import android.graphics.Rect;
  * Created by Jasper on 2/12/2017.
  **/
 
-public class GameOverScreen {
+class GameOverScreen {
     private Rect rectangle;
     private Paint fadePaint;
     private Paint textPaint;
 
-    public GameOverScreen() {
+    GameOverScreen() {
         this.rectangle = new Rect(0, 0, Const.SCREEN_WIDTH, Const.SCREEN_HEIGHT);
         fadePaint = new Paint();
         textPaint = new Paint();
@@ -25,7 +25,7 @@ public class GameOverScreen {
         textPaint.setFakeBoldText(true);
     }
 
-    public void draw(Canvas canvas) {
+    void draw(Canvas canvas) {
         canvas.drawRect(rectangle, fadePaint);
         canvas.drawText("me too", Const.SCREEN_WIDTH/2, Const.SCREEN_HEIGHT/2-200, textPaint);
         canvas.drawText("thanks", Const.SCREEN_WIDTH/2, Const.SCREEN_HEIGHT/2+200, textPaint);
